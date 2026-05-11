@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<!-- [REPLACE:title] -->
+<title>[必填] 替换为文章标题 · Doc Title (横版 PPT 化)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper:    #fbfaf7;
+  --paper-2:  #f3f1ec;
+  --ink:      #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-helper: #8a8a8a;
+  --rule:     #e3e1db;
+  --accent:   #002FA7;          /* IKB 克莱因蓝 (默认) */
+  --accent-rgb: 0,47,167;
+  --accent-soft: rgba(0,47,167, .16);
+  --accent-text: #002FA7;       /* 强调字 (默认 = accent 自身; 浅色 accent 改用更暗派生色) */
+
+  --sans:    'Inter', -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --sans-zh: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Noto Sans SC', sans-serif;
+  --mono:    'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
+
+  /* 16:9 幻灯尺寸. Chrome --print-to-pdf 用 px 单位, 1px ≈ 0.75pt */
+  --pageW: 1600px;
+  --pageH: 900px;
+  --pad-x: 64px;
+  --pad-y: 56px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: #ddd;
+  color: var(--ink);
+  font-family: var(--sans), var(--sans-zh);
+  font-size: 14.5px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@page { size: 1600px 900px; margin: 0; }
+@media print {
+  html, body { background: var(--paper); }
+  body { font-size: 14.5px; }
+}
+
+/* ============== 单页容器 ============== */
+.page {
+  width: var(--pageW);
+  height: var(--pageH);
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-y) var(--pad-x);
+  margin: 24px auto;
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+  break-after: page;
+  page-break-after: always;
+}
+.page:last-child { break-after: auto; page-break-after: auto; }
+@media print {
+  .page { margin: 0; box-shadow: none; }
+}
+
+/* ============== 顶部状态栏 ============== */
+.bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink-helper);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 32px;
+  flex-shrink: 0;
+}
+
+/* 主体区(填满剩余空间) */
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 底部页脚 */
+.foot {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--ink-helper);
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+/* ============== Page 1 · 封面 ============== */
+.cover {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 56px;
+  align-items: center;
+  flex: 1;
+}
+.cover .left .kicker {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-helper);
+  margin-bottom: 24px;
+}
+.cover h1 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 72px;
+  line-height: 1.08;
+  letter-spacing: -0.024em;
+  margin-bottom: 24px;
+}
+.cover h1 em {
+  font-style: normal;
+  color: var(--ink);
+  font-weight: 700;
+  background: linear-gradient(to bottom, transparent 60%, var(--accent-soft) 60%);
+  padding: 0 6px;
+}
+.cover .lead {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+  max-width: 36ch;
+}
+.cover .by {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-helper);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.cover .by .lin { display: block; margin-top: 4px; }
+.cover .right {
+  background: #fff;
+  border: 1px solid var(--rule);
+  padding: 32px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.cover .right .label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-bottom: 18px;
+}
+.cover .right .tldr-body {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 28px;
+}
+.cover .right .tldr-body strong { font-weight: 600; }
+.cover .right ol {
+  list-style: none;
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+}
+.cover .right ol li {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  padding: 7px 0;
+  display: flex;
+  justify-content: space-between;
+}
+.cover .right ol li b {
+  color: var(--ink);
+  font-weight: 600;
+  font-family: var(--sans), var(--sans-zh);
+  letter-spacing: 0;
+  font-size: 14px;
+}
+
+/* ============== 通用章节头 (page 2-7) ============== */
+/* v2 精简: 砍掉 240px 左侧栏 (.num + .gutter), 章节标签全交给顶/底 chrome */
+.section-head {
+  display: block;
+  margin-bottom: 36px;
+  flex-shrink: 0;
+}
+.section-head .num { display: none; }
+.section-head h2 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 1.18;
+  letter-spacing: -0.018em;
+  margin-bottom: 6px;
+}
+.section-head h2 em {
+  font-style: normal;
+  color: var(--ink);
+  font-weight: 700;
+  background: linear-gradient(to bottom, transparent 65%, var(--accent-soft) 65%);
+  padding: 0 4px;
+}
+.section-head .sub {
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  max-width: 70ch;
+}
+
+.section-body {
+  display: block;
+  flex: 1;
+  min-height: 0;
+}
+.section-body .gutter { display: none; }
+.section-body > .main { display: flex; flex-direction: column; gap: 20px; }
+
+/* ============== thesis bullets ============== */
+ul.bullets {
+  list-style: none;
+}
+ul.bullets li {
+  position: relative;
+  padding: 14px 0 14px 28px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+ul.bullets li:last-child { border-bottom: none; }
+ul.bullets li::before {
+  content: '·';
+  position: absolute;
+  left: 6px;
+  top: 12px;
+  color: var(--ink-helper);
+  font-size: 22px;
+  font-weight: 700;
+}
+ul.bullets li b { font-weight: 600; color: var(--ink); margin-right: 6px; }
+
+.pull {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.45;
+  letter-spacing: -0.008em;
+  color: var(--ink);
+  border-left: 4px solid var(--accent);
+  padding: 6px 0 6px 24px;
+  margin-top: 16px;
+  max-width: 64ch;
+}
+.pull em {
+  font-style: normal;
+  color: var(--ink);
+  font-weight: 700;
+  background: linear-gradient(to bottom, transparent 65%, var(--accent-soft) 65%);
+  padding: 0 4px;
+}
+
+/* ============== reasons grid (3×2) ============== */
+.reasons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  flex: 1;
+  min-height: 0;
+}
+.reason { background: var(--paper); padding: 24px 28px; display: flex; flex-direction: column; gap: 8px; }
+.reason .n {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--ink-helper);
+  text-transform: uppercase;
+}
+.reason h4 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.25;
+  margin-top: 4px;
+}
+.reason p { font-size: 15px; line-height: 1.55; color: var(--ink-soft); }
+
+/* ============== use cases ============== */
+.uc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px 28px;
+  flex: 1;
+  min-height: 0;
+}
+/* 6 卡 3×2 (合并版): 行高自适应, 强制 6 卡均分 .body 高度 */
+.uc-grid-3x2 {
+  grid-template-rows: 1fr 1fr;
+  gap: 18px 24px;
+}
+.uc-grid-3x2 .uc { gap: 8px; }
+.uc-grid-3x2 .uc h4 { font-size: 17px; }
+.uc-grid-3x2 .uc p { font-size: 13.5px; line-height: 1.5; margin: 2px 0 6px; }
+.uc-grid-3x2 .uc .prompt { font-size: 11px; line-height: 1.55; padding: 8px 10px; }
+.uc-grid-3x2 .uc .head-uc { padding-bottom: 6px; }
+.uc-grid-3x2 .uc.starter { padding: 14px 16px; }
+.uc-grid-3x2 .uc.starter p { font-size: 13px; line-height: 1.55; }
+
+/* ============== metric row (P2 thesis 数据卡) ============== */
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin-top: 24px;
+}
+.metric { background: var(--paper); padding: 14px 16px 12px; display: flex; flex-direction: column; gap: 4px; }
+.metric-accent { background: var(--accent); }
+.metric-accent .metric-num,
+.metric-accent .metric-label,
+.metric-accent .metric-note { color: var(--ink); }
+.metric-num {
+  font-family: var(--mono); font-weight: 200;
+  font-size: 38px; line-height: 1; letter-spacing: -0.04em;
+  color: var(--ink);
+}
+.metric-unit {
+  font-size: 16px; color: var(--ink-helper); font-weight: 300;
+  margin-left: 3px;
+}
+.metric-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-helper); margin-top: 4px;
+}
+.metric-accent .metric-label { color: rgba(0,0,0,.62); }
+.metric-note { font-size: 11.5px; line-height: 1.45; color: var(--ink-soft); }
+.metric-accent .metric-note { color: rgba(0,0,0,.78); }
+
+/* P2 thesis 通用收紧: bullets 间距收, pull 上紧 */
+section.s, .page .body { /* no-op selector */ }
+.bullets li { padding: 12px 0 12px 28px !important; font-size: 16px !important; }
+.pull { margin-top: 18px !important; padding: 6px 0 6px 22px !important; font-size: 21px !important; }
+
+/* P4 合并版 6 卡 grid 紧贴 sub (减 main 顶部 padding) + 撑满到 page 底 */
+.uc-grid-3x2 { margin-top: 0; flex: 1; }
+.section-body { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.section-body > .main { flex: 1; min-height: 0; }
+.section-head { margin-bottom: 24px !important; }
+.uc {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.uc .head-uc {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.uc h4 { font-family: var(--sans), var(--sans-zh); font-weight: 600; font-size: 19px; color: var(--ink); }
+.uc .tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em; color: var(--ink-helper); text-transform: uppercase; }
+.uc p { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); margin: 4px 0 8px; }
+.uc .prompt {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
+  background: var(--paper-2);
+  border-left: 3px solid var(--ink-helper);
+  padding: 12px 14px;
+  margin-top: auto;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+.uc.starter {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  padding: 22px 24px;
+  border-radius: 4px;
+}
+.uc.starter .head-uc { border-color: rgba(0,0,0,.18); padding-bottom: 8px; }
+.uc.starter h4 { color: var(--ink); font-weight: 700; }
+.uc.starter .tag { color: var(--ink); font-weight: 600; }
+.uc.starter p { color: var(--ink); font-size: 15.5px; line-height: 1.6; margin: 8px 0 0; }
+.uc.starter .k {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: #fff;
+  padding: 2px 8px;
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 3px;
+  color: var(--ink);
+}
+.uc.starter strong { color: var(--ink); font-weight: 700; }
+
+/* ============== FAQ ============== */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 48px;
+  flex: 1;
+  min-height: 0;
+  align-content: start;
+}
+.faq-item {
+  border-bottom: 1px solid var(--rule);
+  padding: 16px 0;
+}
+.faq-item .q {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.faq-item .q::after {
+  content: '·';
+  font-family: var(--mono);
+  font-size: 16px;
+  color: var(--accent-text);
+}
+.faq-item .a {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.faq-item .a strong { color: var(--ink); font-weight: 600; }
+.faq-item .a code { font-family: var(--mono); font-size: 13px; background: var(--paper-2); padding: 1px 6px; border-radius: 3px; }
+
+/* ============== closing rules ============== */
+.rules {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 28px;
+  flex: 1;
+  min-height: 0;
+}
+.rule {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-top: 6px solid var(--accent);
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rule .n {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.rule h5 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--ink);
+}
+.rule p { font-size: 15px; line-height: 1.55; color: var(--ink-soft); }
+
+/* ============================================================
+   v3 协调调整 (去左栏后, 单栏全宽下重新平衡字号 + 行长 + 区块呼吸)
+   规则:
+   - 单栏全宽行长用 max-width 控在 76-88ch
+   - 章节头放大 + 标题/副标题/正文之间字号阶梯加深
+   - 区块内 padding 跟外边距同步放大 (1300px 主体不能用紧凑卡片设置)
+   ============================================================ */
+.bar { font-size: 13px; margin-bottom: 44px; }
+.foot { font-size: 12.5px; margin-top: 32px; }
+
+.section-head { margin-bottom: 60px; }
+.section-head h2 { font-size: 46px; line-height: 1.14; margin-bottom: 16px; letter-spacing: -.02em; }
+.section-head .sub { font-size: 17.5px; line-height: 1.6; max-width: 80ch; color: var(--ink-soft); }
+
+.section-body > .main { gap: 32px; }
+
+ul.bullets { max-width: 92ch; }
+ul.bullets li { padding: 20px 0 20px 32px; font-size: 17.5px; line-height: 1.7; }
+ul.bullets li b { font-weight: 700; color: var(--ink); }
+
+.pull {
+  font-size: 25px; line-height: 1.5;
+  padding: 16px 0 16px 32px;
+  margin-top: 32px;
+  border-left-width: 5px;
+  max-width: 76ch;
+}
+
+/* reasons (3×2 卡) — 卡内呼吸 + 标题层次 */
+.reason { padding: 36px 36px; gap: 14px; }
+.reason h4 { font-size: 25px; line-height: 1.22; margin-top: 6px; }
+.reason p { font-size: 15.5px; line-height: 1.62; }
+
+/* use cases (3 列) */
+.uc-grid { gap: 32px 32px; }
+.uc { gap: 14px; }
+.uc h4 { font-size: 21px; }
+.uc p { font-size: 15px; line-height: 1.62; }
+.uc.starter { padding: 26px 28px; }
+.uc.starter p { font-size: 16px; line-height: 1.65; }
+
+/* FAQ (2 列) */
+.faq-grid { gap: 0 64px; }
+.faq-item { padding: 22px 0; }
+.faq-item .q { font-size: 18px; line-height: 1.4; margin-bottom: 12px; }
+.faq-item .a { font-size: 15px; line-height: 1.7; }
+
+/* closing rules (3 卡) */
+.rule { padding: 32px 32px; gap: 14px; }
+.rule h4, .rule h5 { font-size: 24px; line-height: 1.22; }
+.rule p { font-size: 15.5px; line-height: 1.62; }
+
+/* page-level: 给 .body 一个 max-width 限制, 太宽就居中, 防止 1500+ 主体阅读断裂 */
+.body { max-width: 1320px; margin-left: auto; margin-right: auto; width: 100%; }
+</style>
+</head>
+<body>
+
+<!--
+  ╔═════════════════════════════════════════════════════════════════╗
+  ║  ⚠️  REPLACE-GUIDE · 拷模板后必须替换的内容清单                    ║
+  ║                                                                   ║
+  ║  本模板已填充 Thariq 《HTML 比 Markdown 更有效》一文作为示例.    ║
+  ║  你拷过来后, 用 grep 找下面的标记替换 (顺序无所谓):                 ║
+  ║                                                                   ║
+  ║    grep -n 'REPLACE:' index.html                                  ║
+  ║                                                                   ║
+  ║  必须替换:                                                          ║
+  ║    [REPLACE:title]      <title> + page 1 cover h1                ║
+  ║    [REPLACE:bar]        顶 .bar 项目标识 + 链接                   ║
+  ║    [REPLACE:by]         作者署名 + 阅读量                         ║
+  ║    [REPLACE:tldr]       右侧 TL;DR 摘要 + ToC 章节列表             ║
+  ║    [REPLACE:section]    每章 h2 + sub + 内容                      ║
+  ║    [REPLACE:foot]       底 .foot 页脚右侧链接                     ║
+  ║                                                                   ║
+  ║  按需删/加 .page (当前 6 页):                                     ║
+  ║    01 cover  · 双栏 (h1 + lead + by 左, TLDR + ToC 右)           ║
+  ║    02 thesis · bullets + pull + metric-row 数字带                  ║
+  ║    03 reasons· 6 卡 grid 3×2 (每卡: 编号 + h4 + p)                ║
+  ║    04 cases  · 6 用例 grid 3×2 (每卡: h4 + tag + p + prompt 框)   ║
+  ║    05 faq    · 6 问答 2 列 (每条: q + a)                          ║
+  ║    06 closing· 引文 + 3 rules 卡                                  ║
+  ║                                                                   ║
+  ║  详细可挑用的组件 / layout: references/doc-components.md          ║
+  ║  ──────────────────────────────────────────────────────────────  ║
+-->
+
+
+
+<!-- ============ Page 1 · Cover ============ -->
+<!-- [REPLACE:section-1] · 替换本 .page 内的 h2 / sub / 主体内容; 详见 references/doc-components.md § layout-1 -->
+<div class="page">
+  <div class="bar">
+    <!-- [REPLACE:bar] · 项目标识 · 日期 · 主题 -->
+      <div>FIELD NOTE · CLAUDE CODE · 26.05.08 · IKB 蓝</div>
+    <div>原文 · x.com/trq212/status/2052…</div>
+  </div>
+  <div class="body">
+    <div class="cover">
+      <div class="left">
+        <div class="kicker">[REPLACE:section-kicker] · 例: USING CLAUDE CODE · ESSAY 01</div>
+        <h1><!-- [REPLACE:cover-h1] · 留 <em>...</em> 做高亮带 -->HTML 比 Markdown 更<em>有效</em></h1>
+        <p class="lead"><!-- [REPLACE:cover-lead] · 1-2 句导语 -->为什么 Claude Code 团队几乎都把 Markdown 输出换成 HTML —— 表达力、读完率、分享、交互、还有创作的乐趣。</p>
+        <div class="by">
+          Thariq @trq212 · Anthropic · Claude Code
+          <span class="lin">9.5M views · 13.7K likes · 1,690 RT</span>
+        </div>
+      </div>
+      <aside class="right">
+        <div>
+          <div class="label"><!-- [REPLACE:tldr-label] -->TL;DR</div>
+          <div class="tldr-body"><!-- [REPLACE:tldr-body] · 1-2 句话总结全文 -->Markdown 在膨胀，HTML 在崛起。<strong>Agent 越强，Markdown 的表达力越像约束</strong>。切到 HTML 后 spec 变得能读、能交互、能分享。</div>
+        </div>
+        <ol>
+          <li><b>§ 01 论点</b><span>三件事</span></li>
+          <li><b>§ 02 为什么</b><span>六条理由</span></li>
+          <li><b>§ 03 用法</b><span>5 + 1 起手式</span></li>
+          <li><b>§ 04 FAQ</b><span>是不是太……</span></li>
+          <li><b>§ 05 收束</b><span>Stay in the loop</span></li>
+        </ol>
+      </aside>
+    </div>
+  </div>
+  <div class="foot">
+    <div>01 / 06 · COVER</div>
+    <div>WRITTEN IN HTML</div>
+  </div>
+</div>
+
+<!-- ============ Page 2 · §01 Thesis ============ -->
+<!-- [REPLACE:section-2] · 替换本 .page 内的 h2 / sub / 主体内容; 详见 references/doc-components.md § layout-2 -->
+<div class="page">
+  <div class="bar">
+    <div>§ 01 · THESIS</div>
+    <div>02 / 06</div>
+  </div>
+  <div class="body">
+    <div class="section-head">
+      <div class="num">§ 01 · THESIS</div>
+      <div>
+        <h2>三件事让我换掉 Markdown</h2>
+        <p class="sub">Agent 输出文档这件事，最近发生了三个变化 —— 任何一个都让 Markdown 显得不够用了。</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="gutter">SHIFTS · 3</div>
+      <div class="main">
+        <ul class="bullets">
+          <li><b>表达力。</b>Agent 越强，Markdown 的结构反而越像约束 —— 想要表格、SVG、动画、interactive 都得绕。</li>
+          <li><b>读完率。</b>100 行以上的 .md 没人会读完，包括我自己。组织里更不会有人去读。</li>
+          <li><b>编辑权。</b>我不再亲自改 spec —— 都让 Claude 改，Markdown "易于手编辑" 这条优势也消失了。</li>
+        </ul>
+        <div class="pull">"Markdown has become a <em>restricting format</em>." — Thariq</div>
+
+        <!-- 数据卡区 (填满下半页, 提升信息密度) -->
+        <div class="metric-row">
+          <div class="metric">
+            <div class="metric-num">100<span class="metric-unit">行</span></div>
+            <div class="metric-label">MARKDOWN 阅读上限</div>
+            <div class="metric-note">超过 100 行的 .md，Thariq 自己都读不进去。</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num">2-4<span class="metric-unit">×</span></div>
+            <div class="metric-label">HTML 渲染时长</div>
+            <div class="metric-note">"This does take longer! But the results are worth it."</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num">1<span class="metric-unit">M</span></div>
+            <div class="metric-label">OPUS 4.7 上下文</div>
+            <div class="metric-note">百万级 context 撑得住额外的 token 开销。</div>
+          </div>
+          <div class="metric metric-accent">
+            <div class="metric-num">9.5<span class="metric-unit">M</span></div>
+            <div class="metric-label">本文阅读量</div>
+            <div class="metric-note">9.5M views · 13.7K likes — 共识在形成。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div>02 / 06 · THESIS</div>
+    <div>HTML &gt; MARKDOWN</div>
+  </div>
+</div>
+
+<!-- ============ Page 3 · §02 Why HTML ============ -->
+<!-- [REPLACE:section-3] · 替换本 .page 内的 h2 / sub / 主体内容; 详见 references/doc-components.md § layout-3 -->
+<div class="page">
+  <div class="bar">
+    <div>§ 02 · WHY HTML</div>
+    <div>03 / 06</div>
+  </div>
+  <div class="body">
+    <div class="section-head">
+      <div class="num">§ 02 · WHY HTML</div>
+      <div>
+        <h2>六条理由，按强弱排</h2>
+        <p class="sub">从最功能性的（信息密度）到最主观的（快乐）—— 都是 Thariq 实操后的判断。</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="gutter">REASONS · 6</div>
+      <div class="main" style="padding:0">
+        <div class="reasons">
+          <div class="reason">
+            <div class="n">01 · DENSITY</div>
+            <h4>信息密度</h4>
+            <p>表格、CSS、SVG、代码、交互、空间数据 —— 几乎任何 Claude 能读的信息都装得下。</p>
+          </div>
+          <div class="reason">
+            <div class="n">02 · CLARITY</div>
+            <h4>视觉清晰</h4>
+            <p>不再 100 行就劝退，用 tab、链接、插图分层；移动端能响应式重排。</p>
+          </div>
+          <div class="reason">
+            <div class="n">03 · SHARING</div>
+            <h4>易于分享</h4>
+            <p>上传 S3 拿一个链接 —— 同事点开就读，比 .md 当附件读率高 10 倍。</p>
+          </div>
+          <div class="reason">
+            <div class="n">04 · INTERACTION</div>
+            <h4>双向交互</h4>
+            <p>slider/knob 调参 + "复制为 prompt" 按钮 —— UI 操作直接喂回 Claude，闭环。</p>
+          </div>
+          <div class="reason">
+            <div class="n">05 · CONTEXT</div>
+            <h4>数据吸纳</h4>
+            <p>Claude Code 能扫代码库 + 接 MCP（Slack/Linear）+ 读 git 历史 + 用浏览器。</p>
+          </div>
+          <div class="reason">
+            <div class="n">06 · JOY</div>
+            <h4>快乐</h4>
+            <p>做 HTML 让人更投入，更觉得"我做的"，而不是"agent 做的"。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div>03 / 06 · WHY HTML</div>
+    <div>DENSITY · CLARITY · SHARING · INTERACTION · CONTEXT · JOY</div>
+  </div>
+</div>
+
+<!-- [REPLACE:section-4] · 替换本 .page 内的 h2 / sub / 主体内容; 详见 references/doc-components.md § layout-4 -->
+<!-- ============ Page 4 · §03 Use Cases · 6 用例 一页 (合并旧 P4+P5) ============ -->
+<!-- [REPLACE:section-4] · 替换本 .page 内的 h2 / sub / 主体内容; 详见 references/doc-components.md § layout-4 -->
+<div class="page">
+  <div class="bar">
+    <div>§ 03 · IN PRACTICE</div>
+    <div>04 / 06</div>
+  </div>
+  <div class="body">
+    <div class="section-head">
+      <div class="num">§ 03 · IN PRACTICE</div>
+      <div>
+        <h2>五个用法 + 一个起手式</h2>
+        <p class="sub">每条都附 Thariq 原 prompt 改写，直接抄 — 别先去写 skill。</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="gutter">USE CASES · 6</div>
+      <div class="main" style="padding:0">
+        <div class="uc-grid uc-grid-3x2">
+          <div class="uc">
+            <div class="head-uc"><h4>Specs / 规划 / 探索</h4><span class="tag">01 · MOCKUP GRID</span></div>
+            <p>不确定方向时，让 agent 给 N 个选择并排放 —— 用"指着选"代替"读完三段长文再脑补"。</p>
+            <pre class="prompt">Generate 6 distinctly different approaches — vary layout, tone, density. Lay them out as a single HTML grid. Label each tradeoff.</pre>
+          </div>
+          <div class="uc">
+            <div class="head-uc"><h4>代码评审</h4><span class="tag">02 · ANNOTATED DIFF</span></div>
+            <p>diff 是空间信息，Markdown 把它压扁了。让 agent 渲染带边距批注 + 严重度配色的 HTML。</p>
+            <pre class="prompt">Help me review this PR. Render the diff with inline margin annotations, color-code findings by severity.</pre>
+          </div>
+          <div class="uc">
+            <div class="head-uc"><h4>设计 / 原型</h4><span class="tag">03 · TUNER</span></div>
+            <p>动效和交互不能用文字描述 —— 一个带 slider 的临时页面 5 秒讲清楚一段话讲不明白的事。</p>
+            <pre class="prompt">Create an HTML file with sliders for animation duration and easing. Add a copy button to export the parameters.</pre>
+          </div>
+          <div class="uc">
+            <div class="head-uc"><h4>报告 / 调研 / 学习</h4><span class="tag">04 · INTERACTIVE EXPLAINER</span></div>
+            <p>跨多源综合（代码 + git + Slack + 网页）产 explainer，是 Claude Code 比 ClaudeAI / Design 强的地方。</p>
+            <pre class="prompt">Read the rate limiter code. Produce a single HTML explainer: token-bucket diagram, 3-4 key snippets annotated, gotchas section.</pre>
+          </div>
+          <div class="uc">
+            <div class="head-uc"><h4>临时编辑器</h4><span class="tag">05 · THROWAWAY UI</span></div>
+            <p>Prompt box 里描述不清的事，让 agent 给你做一次性的 purpose-built 小 UI，最后导出回 prompt。</p>
+            <pre class="prompt">Make me an HTML file with each ticket as a draggable card across Now / Next / Later / Cut. Add "copy as markdown" button.</pre>
+          </div>
+          <div class="uc starter">
+            <div class="head-uc"><h4>起手式 · 别先去写 skill</h4><span class="tag">06 · JUST PROMPT IT</span></div>
+            <p>原话："我有点担心大家看完去搞个 <span class="k">/html</span> skill。<strong>不需要做那么多</strong> —— 直接说 <span class="k">"做个 HTML 文件"</span>。先 prompt 几次找感觉，再考虑写 skill。"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div>04 / 06 · USE CASES</div>
+    <div>SPECS · REVIEW · DESIGN · REPORT · EDITOR · JUST PROMPT IT</div>
+  </div>
+</div>
+
+<!-- ============ Page 5 · §04 FAQ ============ -->
+<!-- [REPLACE:section-5] · 替换本 .page 内的 h2 / sub / 主体内容; 详见 references/doc-components.md § layout-5 -->
+<div class="page">
+  <div class="bar">
+    <div>§ 04 · FAQ</div>
+    <div>05 / 06</div>
+  </div>
+  <div class="body">
+    <div class="section-head">
+      <div class="num">§ 04 · FAQ</div>
+      <div>
+        <h2>常见的"是不是太……"</h2>
+        <p class="sub">Thariq 在 FAQ 章节直接回答的 6 个问题。</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="gutter">Q & A · 6</div>
+      <div class="main" style="padding:0">
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="q">是不是更费 token？</div>
+            <div class="a">确实更费。但 <strong>表达力换来的"被读完"是更大的 ROI</strong>。配合 Opus 4.7 的 <code>1M context</code>，多用的 token 几乎感受不到。</div>
+          </div>
+          <div class="faq-item">
+            <div class="q">HTML 比 Markdown 慢多少？</div>
+            <div class="a">慢 <strong>2–4×</strong>。但效果值得。原话："This does take longer! But I've found the results are worth it."</div>
+          </div>
+          <div class="faq-item">
+            <div class="q">怎么打开 / 怎么分享？</div>
+            <div class="a">浏览器本地直接打开（让 Claude <code>open</code> 它），或者 <strong>上传 S3 拿 URL</strong> 做 sharable link。</div>
+          </div>
+          <div class="faq-item">
+            <div class="q">HTML diff 是不是更难做版本控制？</div>
+            <div class="a"><strong>是。这是最大的缺点。</strong> 比 Markdown diff 更 noisy、更难 review。Thariq 没有 silver bullet，明确说这条是 tradeoff。</div>
+          </div>
+          <div class="faq-item">
+            <div class="q">怎么让 HTML 不丑 / 符合公司审美？</div>
+            <div class="a">frontend design plugin 有帮助。要贴公司 style，<strong>让 Claude 扫一遍代码库做一份 design system HTML 当参考</strong>，其他 HTML 文件都引用它。</div>
+          </div>
+          <div class="faq-item">
+            <div class="q">那 Markdown 你完全不用了吗？</div>
+            <div class="a">原话："I have honestly stopped using markdown altogether for almost everything, but I'm probably <strong>far on the HTML maximalist side of things</strong>."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div>05 / 06 · FAQ</div>
+    <div>TRADEOFFS · ANSWERED</div>
+  </div>
+</div>
+
+<!-- ============ Page 6 · §05 Closing ============ -->
+<!-- [REPLACE:section-6] · 替换本 .page 内的 h2 / sub / 主体内容; 详见 references/doc-components.md § layout-7 -->
+<div class="page">
+  <div class="bar">
+    <div>§ 05 · STAY IN THE LOOP</div>
+    <div>06 / 06</div>
+  </div>
+  <div class="body">
+    <div class="section-head">
+      <div class="num">§ 05 · STAY IN THE LOOP</div>
+      <div>
+        <h2>真正让我没切回去的事</h2>
+        <p class="sub">HTML 表面是输出格式的切换，本质是把人重新拉回到 loop 里。</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="gutter">CLOSING · 3 RULES</div>
+      <div class="main" style="padding:0">
+        <div class="pull">"I had begun to fear that, by no longer reading plans in depth, I would simply have to leave Claude to make its choices. Instead, I feel more <em>in the loop</em> than ever before."</div>
+        <div class="rules">
+          <div class="rule">
+            <div class="n">01 · ASK</div>
+            <h5>直接说</h5>
+            <p>"做个 HTML 文件" / "做个 HTML artifact" —— 别先去写 skill。</p>
+          </div>
+          <div class="rule">
+            <div class="n">02 · SHARE</div>
+            <h5>用链接分享</h5>
+            <p>上传 S3 拿一个 URL，同事点开就读，比 .md 附件读完率高 10 倍。</p>
+          </div>
+          <div class="rule">
+            <div class="n">03 · LOOP</div>
+            <h5>回灌 prompt</h5>
+            <p>让 HTML 加 "复制为 prompt" 按钮 —— UI 操作直接喂回 Claude，闭环。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div>06 / 06 · END · WRITTEN IN HTML</div>
+    <div>x.com/trq212 · thariqs.github.io/html-effectiveness</div>
+  </div>
+</div>
+
+</body>
+</html>

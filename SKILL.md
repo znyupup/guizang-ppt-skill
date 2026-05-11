@@ -1,32 +1,43 @@
 ---
 name: guizang-ppt-skill
-description: 生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背景、章节幕封、数据大字报、图片网格等模板。提供两种风格：① "电子杂志 × 电子墨水"（衬线 + 流体背景 + 暖色） ② "瑞士国际主义"（无衬线 + 网格点阵 + IKB/柠檬黄/柠檬绿/安全橙高亮）。当用户需要制作分享 / 演讲 / 发布会风格的网页 PPT，或提到"杂志风 PPT"、"瑞士风 PPT"、"Swiss Style"、"horizontal swipe deck"时使用。
+description: 生成 HTML 单文件视觉作品。三种形态：① 风格 A "电子杂志 × 电子墨水"（横向翻页 PPT，衬线 + 流体背景 + 暖色） ② 风格 B "瑞士国际主义"（横向翻页 PPT，无衬线 + 网格点阵 + IKB/柠檬黄/柠檬绿/安全橙高亮） ③ 风格 C "文档形态 Doc Style"（单页可滚动长读 HTML，黑体 + 收紧字号 + Anthropic/GitHub README 调性，分横版/竖版）。当用户需要制作分享 / 演讲 PPT，或长读文章 / explainer / Field Note / blog post 风格的 HTML 输出，或提到"杂志风 PPT"、"瑞士风 PPT"、"Swiss Style"、"网页文档 / 长读 / 摘读 / Field Note / explainer / horizontal swipe deck"时使用。
 ---
 
 # Magazine Web Ppt
 
 ## 这个 Skill 做什么
 
-生成一份**单文件 HTML**的横向翻页 PPT，提供两种可选的视觉基调：
+生成一份**单文件 HTML** 视觉作品，提供三种可选形态：
 
-### 风格 A · 电子杂志 × 电子墨水（默认）
+### 风格 A · 电子杂志 × 电子墨水（PPT · 默认）
 
-- **WebGL 流体 / 等高线 / 色散背景**（hero 页可见）
+- **横向翻页 PPT**, WebGL 流体 / 等高线 / 色散背景（hero 页可见）
 - **衬线标题（Noto Serif SC + Playfair Display）+ 非衬线正文 + 等宽元数据**
 - 适合：人文分享、行业观察、商业发布、需要"杂志感"的演讲
 - 模板：`assets/template.html` · 主题色：`references/themes.md` · 布局：`references/layouts.md`
 - 美学锚点：像 *Monocle* 杂志贴上了代码
 
-### 风格 B · 瑞士国际主义（Swiss Style）
+### 风格 B · 瑞士国际主义（PPT · Swiss Style）
 
-- **WebGL 极细网格 + 点阵背景**（信息驱动设计）
+- **横向翻页 PPT**, WebGL 极细网格 + 点阵背景（信息驱动设计）
 - **全程无衬线（Inter + Helvetica + Noto Sans SC）+ 极致字号对比**
 - **高反差功能色**：克莱因蓝 IKB / 柠檬黄 / 柠檬绿 / 安全橙（四选一）
 - 适合：科技产品、数据汇报、设计/工程领域分享、年度总结
 - 模板：`assets/template-swiss.html` · 主题色：`references/themes-swiss.md` · 布局：`references/layouts-swiss.md`
 - 美学锚点：像 Massimo Vignelli + Helvetica Forever
 
-**两种风格共享**：横向翻页（键盘 ← →、滚轮、触屏、ESC 索引）、Lucide 图标、Motion One 入场动效（本地 + CDN 双保险）。
+### 风格 C · 文档形态 Doc Style（单页可滚动 · NEW）
+
+- **不是 PPT，是单页可滚动 HTML 文档**, 像精修过的 Markdown
+- **黑体（PingFang SC + Inter）+ 收紧字号**: h1 38px / h2 26px / body 14.5px (照 Thariq 官方比例)
+- **横版 + 竖版两套**: 横版 1440px 双栏 hero + 200px gutter; 竖版单栏 760px 移动友好
+- **复用 Skill 9 套主题色**: Swiss 4 套 (IKB/橙/黄/绿) + Magazine 派生 2 套 (森林墨/牛皮纸)
+- 适合：长读文章、技术 explainer、Field Note 摘读、报告、blog post —— 给人**自己读完**, 而不是讲给人听
+- 模板：`assets/template-doc-portrait.html` / `assets/template-doc-landscape.html` · 详细规则：`references/doc-style.md`
+- 美学锚点：Anthropic / GitHub README / Substack / [thariqs.github.io/html-effectiveness](https://thariqs.github.io/html-effectiveness/)
+
+**风格 A/B 共享**：横向翻页（键盘 ← →、滚轮、触屏、ESC 索引）、Lucide 图标、Motion One 入场动效（本地 + CDN 双保险）。
+**风格 C** 用浏览器原生 scroll + `<details>` 折叠，无需 JS 翻页框架。
 
 ## 何时使用
 
@@ -58,7 +69,7 @@ description: 生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背�
 
 | # | 问题 | 为什么要问 |
 |---|------|-----------|
-| 1 | **风格 A 还是 B?**(电子杂志风 / 瑞士国际主义风) | **必须先问**,决定用哪个 template + layouts + themes 文件 |
+| 1 | **风格 A、B 还是 C?**(电子杂志 PPT / 瑞士 PPT / 文档形态 Doc) | **必须先问**,决定用哪个 template + layouts + themes 文件。如果用户提到"长读 / 文章 / explainer / 摘读 / Field Note / blog post"等强调"自己读完"的形态,直接选 C。 |
 | 2 | **受众是谁?分享场景?**(行业内部 / 商业发布 / demo day / 私享会) | 决定语言风格和深度 |
 | 3 | **分享时长?** | 15 分钟 ≈ 10 页,30 分钟 ≈ 20 页,45 分钟 ≈ 25-30 页 |
 | 4 | **有没有原始素材?**(文档 / 数据 / 旧 PPT / 文章链接) | 有素材就基于素材,没有就帮他搭 |
@@ -70,13 +81,17 @@ description: 生成横向翻页网页 PPT（单 HTML 文件），含 WebGL 背�
 
 | 如果用户说... | 推荐风格 |
 |---|---|
-| "杂志感" / "人文" / "Monocle 风" / 不指定 | **A · 电子杂志风** |
-| "瑞士风" / "Swiss Style" / "Helvetica" / "极简" / "网格" / "信息图" / "数据驱动" | **B · 瑞士国际主义风** |
-| 内容是 AI 产品 / 技术 / 工程 / 数据汇报 | B 更合适 |
-| 内容是行业观察 / 人文 / 故事 / 文化 | A 更合适 |
-| 用户给了大量 KPI 数字 / 路线图 / 流程 | B 更合适(`Data Hero` 布局是瑞士风专长) |
-| 用户给了大量纪实照片 / 人文图片 | A 更合适(图片网格、左文右图是杂志风专长) |
-| 用户需要 GPT-M 2.0 生成截图再设计 / 信息图 / 证据墙 | B 也很合适(P23/P24 是瑞士风图片专用版式) |
+| "杂志感" / "人文" / "Monocle 风" / 不指定 | **A · 电子杂志风 PPT** |
+| "瑞士风" / "Swiss Style" / "Helvetica" / "极简" / "网格" / "信息图" / "数据驱动" | **B · 瑞士国际主义 PPT** |
+| "长读 / 文章 / explainer / 摘读 / Field Note / blog post / 网页文档" | **C · 文档形态 Doc Style** |
+| "Anthropic / GitHub README / Substack / 像 Thariq 那种" | **C · 文档形态** |
+| 内容是 AI 产品 / 技术 / 工程 / 数据汇报 + 演讲场景 | B 更合适 |
+| 内容是 AI 产品 / 技术 / 工程 / 数据汇报 + 自己读完场景 | C 更合适 |
+| 内容是行业观察 / 人文 / 故事 / 文化 + 演讲 | A 更合适 |
+| 用户给了大量 KPI 数字 / 路线图 / 流程 + 演讲 | B 更合适(`Data Hero` 布局是瑞士风专长) |
+| 用户给了大量纪实照片 / 人文图片 + 演讲 | A 更合适(图片网格、左文右图是杂志风专长) |
+| 用户需要 GPT-M 2.0 生成截图再设计 / 信息图 / 证据墙 + 演讲 | B 也很合适(P23/P24 是瑞士风图片专用版式) |
+| 内容会发到群里 / 邮件 / S3 链接让别人自己读 | **C · 文档形态** (FAQ 折叠 / 锚点跳转 / 移动友好) |
 
 #### 大纲协助(如果用户没有大纲)
 
@@ -386,6 +401,17 @@ cp "<SKILL_ROOT>/assets/template-swiss.html" "项目/XXX/ppt/index.html"
 22. **P23/P24 图片同组一致**——同一组图片统一比例、高度、边距、线条粗细;信息图/UI 图加 `.fit-contain`
 23. **组件角色要正确**——P23/P24 的 caption 是必选信息锚点;P22 的 KPI/说明是必选;数据专用版式必须有真实数据,不能靠文案硬填
 24. **通用/非通用版式要分清**——P3/P8/P11/P19/P23 较通用;P6/P7/P20/P21/P22 是数据/案例专用;P14/P15/P17 是结构专用
+25. **chrome 是唯一 meta 入口**(v3 起强制)——顶 `.chrome-min` / 底 chrome 二选一,内容区**不允许**重复 `.t-meta` "REASONS · 03" 这种 mono uppercase 章节小字; 装饰编号 `.cell-num` 01-06 / timeline `01-05` 全砍, 留视觉锚 (色块/圆点); 角标 `— STATEMENT 01` `→ END · WRITTEN IN HTML` 一律不留; split slide 一侧 chrome 即可. 详见 `references/checklist.md` § 2c-2 / 2d / 2e / 2e-2
+
+#### 风格 C · 文档形态必查 (横版导 PDF 重点)
+
+1. **横版必单栏全宽**——`.section-head` `.section-body` 都用 `display:block`, **禁止** 240px sticky 左栏; `.section-head .num` 与 `.section-body .gutter` 一律 `display:none` (章节标识只在顶 / 底 chrome 出现一次, 见 `references/checklist.md` § 2f)
+2. **单栏全宽字号体系按 v3 来**(不能用 v2 旧值)——`h2: 46px / 正文: 17.5px lh 1.7 / 卡 padding: 36×36 / .body max-width: 1320px 居中 / ul.bullets max-width: 92ch`. 详见 `references/doc-style.md` § 单栏全宽基线 v3
+3. **不要在 doc 模板里出现 vw 字号**(除横版 hero h1 已用 clamp 例外)
+4. **强调字 `<em>`**——黑体没真斜体, 用 color + weight 600 + 底部高亮带, 不要 `font-style: italic`
+5. **6 套预设颜色之外不接受**——委婉拒绝, 按 `references/doc-style.md` 表格让用户挑
+6. **每页填到 ≥85% 高度**(横版 PPT 化致命伤)——内容少就用 `.metric-row` / 6 卡 grid / FAQ 双列填; 不要让某页空 50%. 详见 `references/doc-components.md`
+7. **layout 是积木, 按内容定**——`assets/template-doc-landscape.html` 默认 6 .page (Thariq 文章示例填充), 按用户章节数任意增删. 拷模板后 `grep -n 'REPLACE:' index.html` 列出所有要替换锚 (~20 个), 不需要的章节整 .page 删. 详见 `references/doc-components.md` § "内容驱动结构"
 
 ### Step 5 · 本地预览
 
@@ -409,31 +435,36 @@ open "项目/XXX/ppt/index.html"
 guizang-ppt-skill/
 ├── SKILL.md                  ← 你正在读
 ├── assets/
-│   ├── template.html         ← 风格 A · 电子杂志风模板（种子文件）
-│   ├── template-swiss.html   ← 风格 B · 瑞士国际主义风模板（种子文件）
-│   └── motion.min.js         ← Motion One 本地副本（离线兜底,约 64KB,共用）
+│   ├── template.html              ← 风格 A · 电子杂志风 PPT 模板（种子文件）
+│   ├── template-swiss.html        ← 风格 B · 瑞士国际主义 PPT 模板（种子文件）
+│   ├── template-doc-portrait.html ← 风格 C · 文档形态 · 竖版（单栏 760px / 移动友好）
+│   ├── template-doc-landscape.html← 风格 C · 文档形态 · 横版（双栏 1440px / 桌面优先）
+│   └── motion.min.js              ← Motion One 本地副本（离线兜底, 约 64KB, A/B 共用）
 ├── scripts/
-│   └── validate-swiss-deck.mjs ← 风格 B 静态校验:登记版式、图片槽位、SVG 文本、标题对齐
+│   └── validate-swiss-deck.mjs    ← 风格 B 静态校验: 登记版式、图片槽位、SVG 文本、标题对齐
 └── references/
-    ├── components.md         ← 组件手册（字体、色、网格、图标、callout、stat、pipeline、动效... 风格 A 适用）
-    ├── layouts.md            ← 风格 A · 10 种页面布局骨架（可直接粘贴,含动效标记）
-    ├── swiss-layout-lock.md  ← 风格 B · 原始 22P 版式锁,正文页必须按这里登记
-    ├── layouts-swiss.md      ← 风格 B · 原始 22P 骨架说明 + 少量明确标注的实验区
-    ├── themes.md             ← 风格 A · 5 套主题色预设（只能选不能自定义）
-    ├── themes-swiss.md       ← 风格 B · 4 套瑞士风主题色预设（IKB / 柠檬黄 / 柠檬绿 / 安全橙）
-    ├── image-prompts.md      ← GPT-M 2.0 配图类型、比例和基础提示词
-    └── checklist.md          ← 质量检查清单（P0/P1/P2/P3 分级）
+    ├── components.md              ← 组件手册（字体、色、网格、图标、callout、stat、pipeline、动效... 风格 A 适用）
+    ├── layouts.md                 ← 风格 A · 10 种页面布局骨架（可直接粘贴, 含动效标记）
+    ├── swiss-layout-lock.md       ← 风格 B · 原始 22P 版式锁, 正文页必须按这里登记
+    ├── layouts-swiss.md           ← 风格 B · 原始 22P 骨架说明 + 少量明确标注的实验区
+    ├── themes.md                  ← 风格 A · 5 套主题色预设（只能选不能自定义）
+    ├── themes-swiss.md            ← 风格 B · 4 套瑞士风主题色预设（IKB / 柠檬黄 / 柠檬绿 / 安全橙）
+    ├── doc-style.md               ← 风格 C · 文档形态完整规则（横竖版选择、6 套色变体、黑体强调规范）
+    ├── image-prompts.md           ← GPT-M 2.0 配图类型、比例和基础提示词
+    └── checklist.md               ← 质量检查清单（P0/P1/P2/P3 分级）
 ```
 
 **加载顺序建议**：
 1. 先读完 `SKILL.md`(这个文件)了解整体
-2. Step 1 需求澄清**第一问**先确定风格 A 还是 B,然后:
-   - 风格 A:读 `themes.md` 帮用户选一套主题色
-   - 风格 B:读 `themes-swiss.md` 帮用户选一套主题色
-3. **动手前 Read 对应模板的 `<style>` 块**——这是类名的唯一来源,缺类会导致整页样式崩
+2. Step 1 需求澄清**第一问**先确定风格 A、B 还是 C, 然后:
+   - 风格 A: 读 `themes.md` 帮用户选一套主题色
+   - 风格 B: 读 `themes-swiss.md` 帮用户选一套主题色
+   - 风格 C: 读 `doc-style.md` 完整规则 + 同时参考 `themes.md` / `themes-swiss.md` 选色
+3. **动手前 Read 对应模板的 `<style>` 块**——这是类名的唯一来源, 缺类会导致整页样式崩
    - 风格 A → `assets/template.html`
    - 风格 B → `assets/template-swiss.html`
-4. 读对应的 layouts 文件挑布局:
+   - 风格 C → `assets/template-doc-portrait.html` 或 `assets/template-doc-landscape.html`
+4. 读对应的 layouts / 规则文件:
    - 风格 A → `layouts.md`(顶部有 Pre-flight 类名清单、主题节奏规划、动效 recipe 决策树)
    - 风格 B → **先读 `swiss-layout-lock.md`**,再读 `layouts-swiss.md`;正文页必须从 S01-S22 选择,每页写 `data-layout`
 5. 如果在 Codex 中生成配图,读 `image-prompts.md` 挑图片类型、比例和基础提示词

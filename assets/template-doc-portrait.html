@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[必填] 文章标题 · Doc Title</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@500;600&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper: #fbfaf7;
+  --ink:   #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --ink-helper: #8a8a8a;
+  --rule:  #e5e3dd;
+  --accent: #002FA7; /* 暖橙, 接近 Thariq 站点的强调色 */
+  --tag-bg: #f1efe9;
+
+  --sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  --sans-zh: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei UI', sans-serif;
+  /* V6 SANS: 黑体替换衬线 */
+  --serif: 'Inter', -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --serif-zh: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Noto Sans SC', sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans), var(--sans-zh);
+  font-size: 14.5px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============== layout shell ============== */
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px 28px 96px;
+}
+@media (max-width: 640px) {
+  .page { padding: 40px 18px 72px; }
+}
+
+/* ============== header bar ============== */
+.bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-helper);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 48px;
+}
+.bar a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--ink-helper); }
+.bar a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ============== hero ============== */
+.hero { margin-bottom: 56px; }
+.hero .kicker {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-helper);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 38px;
+  line-height: 1.18;
+  letter-spacing: -0.018em;
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+.hero h1 em { font-style: italic; font-weight: 500; }
+.hero .by {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-helper);
+  letter-spacing: 0.04em;
+}
+.hero .by a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--rule); }
+
+/* ============== section ============== */
+section.s {
+  margin-top: 56px;
+  scroll-margin-top: 16px;
+}
+section.s .num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--ink-helper);
+  margin-bottom: 6px;
+}
+section.s h2 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+section.s .sub {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-bottom: 24px;
+  max-width: 64ch;
+}
+section.s p {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin: 12px 0;
+  max-width: 66ch;
+}
+
+/* h3 inside section */
+section.s h3 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.35;
+  margin: 28px 0 8px;
+  color: var(--ink);
+}
+
+/* ============== TLDR card ============== */
+.tldr {
+  border: 1px solid var(--rule);
+  background: #fff;
+  padding: 18px 20px;
+  border-radius: 4px;
+  margin: 8px 0 32px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 16px;
+}
+.tldr .label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-top: 2px;
+}
+.tldr .body {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.tldr .body strong { color: var(--ink); font-weight: 600; }
+
+/* ============== 强调短句 / pull quote ============== */
+.pull {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  border-left: 2px solid var(--accent);
+  padding: 4px 0 4px 20px;
+  margin: 28px 0;
+  max-width: 60ch;
+}
+.pull em { font-style: normal; color: var(--accent); font-weight: 600; background: linear-gradient(to bottom, transparent 65%, rgba(0,47,167,.18) 65%); padding: 0 2px; }
+
+/* ============== 列表 ============== */
+ul.bullets {
+  margin: 12px 0 16px;
+  padding: 0;
+  list-style: none;
+  max-width: 64ch;
+}
+ul.bullets li {
+  position: relative;
+  padding: 8px 0 8px 20px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+ul.bullets li:last-child { border-bottom: none; }
+ul.bullets li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  color: var(--ink-helper);
+  font-weight: 700;
+}
+ul.bullets li b {
+  font-weight: 600;
+  color: var(--ink);
+  display: inline-block;
+  margin-right: 4px;
+}
+
+/* ============== reasons grid ============== */
+.reasons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 16px 0 24px;
+}
+.reason {
+  background: var(--paper);
+  padding: 16px 18px;
+}
+.reason .n {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  color: var(--ink-helper);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.reason h4 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.3;
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+.reason p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+}
+@media (max-width: 540px) {
+  .reasons { grid-template-columns: 1fr; }
+}
+
+/* ============== use cases ============== */
+.uc { margin: 16px 0; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+.uc:last-child { border-bottom: none; }
+.uc .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.uc h4 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 17px;
+  margin: 0;
+  color: var(--ink);
+}
+.uc .tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: var(--ink-helper);
+  text-transform: uppercase;
+}
+.uc p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 6px 0 8px;
+  max-width: 64ch;
+}
+.uc .prompt {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  background: var(--tag-bg);
+  border-left: 2px solid var(--ink-helper);
+  padding: 10px 14px;
+  margin: 10px 0 0;
+  color: var(--ink);
+  white-space: pre-wrap;
+  border-radius: 0 3px 3px 0;
+}
+
+/* ============== FAQ ============== */
+.faq { margin-top: 12px; }
+.faq details {
+  border-bottom: 1px solid var(--rule);
+  padding: 12px 0;
+}
+.faq details:last-child { border-bottom: none; }
+.faq summary {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 15.5px;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: '+';
+  font-family: var(--mono);
+  font-size: 16px;
+  color: var(--ink-helper);
+  font-weight: 400;
+  transform: translateY(-2px);
+}
+.faq details[open] summary::after { content: '−'; color: var(--accent); }
+.faq details[open] summary { color: var(--accent); }
+.faq .a {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin: 10px 0 0;
+  max-width: 64ch;
+}
+.faq .a strong { color: var(--ink); font-weight: 600; }
+.faq .a code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--tag-bg);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+/* ============== closing ============== */
+.closing {
+  margin-top: 64px;
+  padding: 28px 24px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.closing h3 {
+  font-family: var(--sans), var(--sans-zh);
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+.closing ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rule;
+}
+.closing ol li {
+  counter-increment: rule;
+  padding: 12px 0 12px 36px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  position: relative;
+}
+.closing ol li:last-child { border-bottom: none; }
+.closing ol li::before {
+  content: counter(rule, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  font-weight: 500;
+}
+.closing ol li b { color: var(--ink); font-weight: 600; }
+
+/* ============== footer ============== */
+.foot {
+  margin-top: 56px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-helper);
+  display: flex;
+  justify-content: space-between;
+}
+.foot a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--ink-helper); }
+
+/* ============== inline emphasis ============== */
+em.acc { font-style: normal; color: var(--accent); font-weight: 600; }
+.k { font-family: var(--mono); font-size: 12.5px; background: var(--tag-bg); padding: 1px 5px; border-radius: 3px; }
+
+  /* === EMPHASIS · 黑体不依赖斜体: 色 + weight + 高亮底 === */
+  em { font-style: normal; }
+  .hero h1 em,
+  section.s h2 em,
+  section.s h3 em,
+  p em,
+  .a em,
+  .reason em,
+  .uc em,
+  .closing em {
+    color: var(--accent);
+    font-weight: 600;
+    background: linear-gradient(to bottom, transparent 65%, rgba(0,47,167,.18) 65%);
+    padding: 0 2px;
+  }
+  /* 标题里的 em 用纯色 + 加粗, 不要底色 (太花) */
+  .hero h1 em, section.s h2 em {
+    background: none;
+    padding: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     风格 C · 文档形态 · 竖版 (单栏 760px / 可滚动)
+     - 适合: 长读文章、技术 explainer、ESsay 摘读、blog post
+     - 字号: h1 38px / h2 26px / h3 19px / body 14.5px (照 Thariq 官方比例)
+     - 字体: PingFang SC + Inter (黑体, 不依赖斜体)
+     - 默认色: IKB 克莱因蓝 #002FA7
+     - 换色: 见 references/doc-style.md, 改 :root 的 --accent / --accent-rgb / --accent-soft 即可
+     - 强调字 <em>: 不用斜体 (黑体没真斜体), 用 accent 色 + weight 600 + 底部高亮带
+     - 浅色 accent (柠檬黄/柠檬绿): 必须把 em 改回 ink 黑字, 只让高亮带保留 accent
+     ============================================================ -->
+
+<div class="page">
+  <div class="bar">
+    <div>FIELD NOTE · CLAUDE CODE · 26.05.08</div>
+    <div><a href="https://x.com/trq212/status/2052809885763747935">原文 ↗</a></div>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">USING CLAUDE CODE · ESSAY 01</div>
+    <h1>HTML 比 Markdown 更<em>有效</em></h1>
+    <div class="by">
+      Thariq <a href="https://x.com/trq212">@trq212</a> · Anthropic · Claude Code · 9.5M views · 13.7K likes
+    </div>
+  </header>
+
+  <div class="tldr">
+    <div class="label">TL;DR</div>
+    <div class="body">
+      Markdown 在膨胀，HTML 在崛起。<strong>Agent 越强，Markdown 的表达力越像约束</strong>。
+      切到 HTML 后，spec 变得能读、能交互、能分享 —— 而且我比以前更觉得自己在 loop 里。
+    </div>
+  </div>
+
+  <!-- ============ §01 论点 ============ -->
+  <section class="s" id="thesis">
+    <div class="num">§ 01 · THESIS</div>
+    <h2>三件事让我换掉 Markdown</h2>
+    <p class="sub">Agent 输出文档这件事，最近几个月发生了三个变化 —— 任何一个都让 Markdown 显得不够用了。</p>
+
+    <ul class="bullets">
+      <li><b>表达力。</b>Agent 越强，Markdown 的结构反而越像约束 —— 想要表格、SVG、动画、interactive 都得绕。</li>
+      <li><b>读完率。</b>100 行以上的 .md 没人会读完，包括我自己。组织里更不会有人去读。</li>
+      <li><b>编辑权。</b>我不再亲自改 spec —— 都让 Claude 改，Markdown "易于手编辑" 这条优势也消失了。</li>
+    </ul>
+
+    <div class="pull">
+      "Markdown has become a <em>restricting format</em>." — Thariq
+    </div>
+  </section>
+
+  <!-- ============ §02 6 reasons ============ -->
+  <section class="s" id="why">
+    <div class="num">§ 02 · WHY HTML</div>
+    <h2>六条理由，按强弱排</h2>
+    <p class="sub">从最功能性的（信息密度）到最主观的（快乐）—— 但都是 Thariq 实操后的判断。</p>
+
+    <div class="reasons">
+      <div class="reason">
+        <div class="n">01 · DENSITY</div>
+        <h4>信息密度</h4>
+        <p>表格、CSS、SVG、代码、交互、空间数据 —— "几乎任何 Claude 能读的信息" 都装得下。</p>
+      </div>
+      <div class="reason">
+        <div class="n">02 · CLARITY</div>
+        <h4>视觉清晰</h4>
+        <p>不再 100 行就劝退，用 tab、链接、插图分层；移动端能响应式重排。</p>
+      </div>
+      <div class="reason">
+        <div class="n">03 · SHARING</div>
+        <h4>易于分享</h4>
+        <p>上传 S3 拿一个链接 —— 同事点开就读，比 .md 当附件读率高 10 倍。</p>
+      </div>
+      <div class="reason">
+        <div class="n">04 · INTERACTION</div>
+        <h4>双向交互</h4>
+        <p>slider/knob 调参 + "复制为 prompt" 按钮 —— UI 操作的结果直接喂回 Claude，闭环。</p>
+      </div>
+      <div class="reason">
+        <div class="n">05 · CONTEXT</div>
+        <h4>数据吸纳</h4>
+        <p>Claude Code 能扫代码库 + 接 MCP（Slack/Linear）+ 读 git 历史 + 用浏览器，全能进 spec。</p>
+      </div>
+      <div class="reason">
+        <div class="n">06 · JOY</div>
+        <h4>快乐</h4>
+        <p>做 HTML 让人更投入，更觉得"我做的"，而不是"agent 做的"。这条本身就是理由。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ §03 use cases ============ -->
+  <section class="s" id="cases">
+    <div class="num">§ 03 · IN PRACTICE</div>
+    <h2>五个用法 + 一个起手式</h2>
+    <p class="sub">每条都附 Thariq 的原 prompt 改写。直接抄，不需要写 skill。</p>
+
+    <div class="uc">
+      <div class="head">
+        <h4>Specs / 规划 / 探索</h4>
+        <span class="tag">01 · MOCKUP GRID</span>
+      </div>
+      <p>不确定方向时，让 agent 同时给 N 个选择，并排放在一页里 —— 用"指着选"代替"读完三段长文再脑补"。</p>
+      <pre class="prompt">I'm not sure what direction to take the onboarding screen.
+Generate 6 distinctly different approaches — vary layout,
+tone, and density — and lay them out as a single HTML file
+in a grid. Label each with the tradeoff it's making.</pre>
+    </div>
+
+    <div class="uc">
+      <div class="head">
+        <h4>代码评审</h4>
+        <span class="tag">02 · ANNOTATED DIFF</span>
+      </div>
+      <p>diff 是空间信息，Markdown 把它压扁了。让 agent 把变更渲染成带边距批注、按严重度配色的 HTML —— 比 GitHub 默认 view 顺。</p>
+      <pre class="prompt">Help me review this PR by creating an HTML artifact.
+Focus on the streaming/backpressure logic. Render the diff
+with inline margin annotations, color-code findings by severity.</pre>
+    </div>
+
+    <div class="uc">
+      <div class="head">
+        <h4>设计 / 原型</h4>
+        <span class="tag">03 · TUNER</span>
+      </div>
+      <p>动效和交互不能用文字描述 —— 一个带 slider 的临时页面 5 秒讲清楚一段话讲不明白的事。</p>
+      <pre class="prompt">I want to prototype a new checkout button that does a pop
+animation and turns purple. Create a HTML file with sliders
+for duration and easing. Give me a copy button to export
+the parameters that worked.</pre>
+    </div>
+
+    <div class="uc">
+      <div class="head">
+        <h4>报告 / 调研 / 学习</h4>
+        <span class="tag">04 · INTERACTIVE EXPLAINER</span>
+      </div>
+      <p>跨多源综合（代码 + git + Slack + 网页）然后产 explainer，是 Claude Code 比 ClaudeAI / Design 强的地方。</p>
+      <pre class="prompt">I don't understand how our rate limiter actually works.
+Read the relevant code and produce a single HTML explainer:
+a token-bucket flow diagram, the 3-4 key code snippets
+annotated, and a "gotchas" section at the bottom.</pre>
+    </div>
+
+    <div class="uc">
+      <div class="head">
+        <h4>临时编辑器</h4>
+        <span class="tag">05 · THROWAWAY UI</span>
+      </div>
+      <p>有时候在 prompt box 里描述不清想要什么 —— 让 agent 给你做一次性的、purpose-built 的小 UI，最后导出回 prompt。</p>
+      <pre class="prompt">I need to reprioritize 30 Linear tickets. Make me an
+HTML file with each ticket as a draggable card across
+Now / Next / Later / Cut columns. Pre-sort them by your
+best guess. Add a "copy as markdown" button.</pre>
+    </div>
+
+    <div class="uc" style="background:#f4f6fc;border:1px solid #cfd6ed;border-radius:4px;padding:18px 18px 14px;margin:24px 0 0">
+      <div class="head">
+        <h4 style="color:var(--accent)">起手式 · 别先去写 skill</h4>
+        <span class="tag" style="color:var(--accent)">06 · JUST PROMPT IT</span>
+      </div>
+      <p style="color:var(--ink)">Thariq 原话："我有点担心大家看完文章就去搞个 <code class="k">/html</code> skill。
+        虽然有价值，但你<strong>不需要做那么多</strong> —— 直接说 <code class="k">"做个 HTML 文件"</code> 或
+        <code class="k">"做个 HTML artifact"</code>。先 prompt 几次找感觉，再考虑写 skill。"</p>
+    </div>
+  </section>
+
+  <!-- ============ §04 FAQ ============ -->
+  <section class="s" id="faq">
+    <div class="num">§ 04 · FAQ</div>
+    <h2>常见的"是不是太……"</h2>
+    <p class="sub">点开看 Thariq 的回答（按 + 展开）。</p>
+
+    <div class="faq">
+      <details>
+        <summary>是不是更费 token？</summary>
+        <div class="a">
+          确实更费。但 <strong>表达力换来的"被读完"是更大的 ROI</strong>。
+          配合 Opus 4.7 的 <code>1M context</code>，多用的 token 在窗口里几乎感受不到。
+        </div>
+      </details>
+      <details>
+        <summary>HTML 比 Markdown 慢多少？</summary>
+        <div class="a">
+          慢 <strong>2–4×</strong>。但效果值得。Thariq 原话："This does take longer! But I've found the results are worth it."
+        </div>
+      </details>
+      <details>
+        <summary>HTML 文件怎么打开 / 怎么分享？</summary>
+        <div class="a">
+          浏览器本地直接打开（让 Claude <code>open</code> 它），或者 <strong>上传 S3 拿 URL</strong> 做 sharable link。
+        </div>
+      </details>
+      <details>
+        <summary>HTML diff 是不是更难做版本控制？</summary>
+        <div class="a">
+          <strong>是。这是最大的缺点。</strong> 比 Markdown diff 更 noisy、更难 review。Thariq 没有 silver bullet，明确说这条是 tradeoff。
+        </div>
+      </details>
+      <details>
+        <summary>怎么让 HTML 不丑 / 符合公司审美？</summary>
+        <div class="a">
+          frontend design plugin 有帮助。要贴公司 style，<strong>让 Claude 扫一遍代码库做一份 design system HTML 当参考</strong>，
+          其他 HTML 文件都引用它。
+        </div>
+      </details>
+      <details>
+        <summary>那 Markdown 你完全不用了吗？</summary>
+        <div class="a">
+          原话："I have honestly stopped using markdown altogether for almost everything,
+          but I'm probably <strong>far on the HTML maximalist side of things</strong>."
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ §05 closing ============ -->
+  <section class="s" id="loop">
+    <div class="num">§ 05 · STAY IN THE LOOP</div>
+    <h2>真正让我没切回去的事</h2>
+
+    <p>Thariq 文章最后一段说得很直白 ——</p>
+
+    <div class="pull">
+      "I had begun to fear that, by no longer reading plans in depth,
+      I would simply have to leave Claude to make its choices.
+      Instead, I feel more <em>in the loop</em> than ever before."
+    </div>
+
+    <p>HTML 表面是输出格式的切换，本质是<strong>把人从"读 plan"重新拉回到"看清楚 / 改一下 / 回到 prompt"的循环</strong>里。
+      切了之后才发现 —— 之前那种"放手让 Claude 决定"的焦虑没有了。</p>
+
+    <div class="closing">
+      <h3>三条带走</h3>
+      <ol>
+        <li><b>直接说</b> "做个 HTML 文件" / "做个 HTML artifact" —— 别先去写 skill。</li>
+        <li><b>用链接分享</b> 上传 S3 拿一个 URL，同事点开就读，比 .md 附件读完率高 10 倍。</li>
+        <li><b>回灌 prompt</b> 让 HTML 加 "复制为 prompt" 按钮 —— 把 UI 操作的结果直接喂回 Claude，闭环。</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="foot">
+    <div>END · WRITTEN IN HTML</div>
+    <div><a href="https://thariqs.github.io/html-effectiveness/">官方示例 ↗</a></div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,8 @@
 # Guizang PPT Skill · 网页 PPT / 配图 / 封面
 
 > 🌏 **English version: [README.en.md](./README.en.md)**
+>
+> 🍴 **本仓库是 [@op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) 的 fork**, 主仓库由 [@op7418 歸藏](https://x.com/op7418) 创作 (MIT License). 本 fork 在主仓库基础上新增 **风格 C · 文档形态 (Doc Style)** — 适合横版/竖版 HTML 长读文章 / Field Note / explainer (灵感来自 Anthropic Thariq 的 [HTML > Markdown](https://thariqs.github.io/html-effectiveness/) 系列产出). 详见末尾 [Fork 改动](#fork-改动).
 
 一个适配 Claude Code / Codex 等 Agent 环境的网页 PPT 技能,用于生成**单文件 HTML 横向翻页 PPT**、PPT 配图和多平台封面。
 
@@ -213,6 +215,69 @@ Bug、排版问题、新布局需求——欢迎开 Issue 或 PR。改动请优�
 - 把踩过的坑写到 `checklist.md` 对应的 P0 / P1 / P2 / P3 级别
 - 新主题色进 `themes.md` 并给出适合的场景
 
+---
+
+## Fork 改动
+
+本 fork 由 [@znyupup nyx研究所](https://github.com/znyupup) 维护, 在 [@op7418 主仓库](https://github.com/op7418/guizang-ppt-skill) 基础上新增:
+
+### 风格 C · 文档形态 (Doc Style) — 横版 / 竖版
+
+灵感来自 Anthropic Thariq 团队的 [HTML > Markdown](https://thariqs.github.io/html-effectiveness/) 系列实战 (Field Note / explainer / status report 等). 适合**长读文章 / 周报 / 调研 / 分享链接** 类输出 — 同时是 HTML (浏览器直开) 和 PDF (Chrome `--print-to-pdf` 16:9 1600×900).
+
+新增模板 + 文档:
+
+```
+assets/
+├─ template-doc-portrait.html      ← 竖版 (760px max, 移动友好)
+└─ template-doc-landscape.html     ← 横版 (PPT 化 6 page · 16:9 1600×900)
+
+references/
+├─ doc-style.md                    ← 风格 C 完整规则 (横竖版选择 / 6 套色变体 / 单栏全宽基线 v3)
+├─ doc-components.md               ← 7 种 page layout skeleton + 内嵌组件速查
+└─ checklist.md (扩展)              ← +5 条规则: chrome 唯一 meta 入口 / 装饰编号砍 / 角标砍 / split slide 一侧 chrome / doc-style 禁 240px 左栏
+```
+
+### 关键设计
+
+| 维度 | 实现 |
+|---|---|
+| 输出形态 | HTML 浏览器直开 + PDF 一键导出 (同模板) |
+| 页面尺寸 | 16:9 1600×900px, 一章一 .page |
+| 色板 | 9 套预设 (Swiss IKB/橙/黄/绿 + Magazine 森林墨/牛皮纸 等), 改 :root 4 行切色 |
+| 字号 | 单栏全宽基线 v3: h2 46px / 正文 17.5px lh 1.7 / 卡 padding 36×36 / .body 1320px 居中 |
+| 章节灵活 | 6 种 page layout (cover / thesis / reasons / cases / faq / closing) 按内容数任意拼装 |
+| 替换标记 | 模板自带 ~20 个 `<!-- [REPLACE:xxx] -->` 注释, agent/用户 `grep REPLACE:` 找全 |
+| 反例库 | checklist.md 收集踩过的坑 (页面利用率 < 50% / 章节标识三处叠加 / scrolling 模板硬塞 PPT 化等) |
+
+### 用法
+
+```bash
+# 1. 拷模板
+cp <skill-root>/assets/template-doc-landscape.html 项目/index.html
+
+# 2. 列出所有要替换的锚 (~20 个)
+grep -n 'REPLACE:' 项目/index.html
+
+# 3. 改 :root 切色 (4 行) + 替换 [REPLACE:xxx] 内容 + 按需删/加 .page
+
+# 4. 浏览器看 (HTML)
+open 项目/index.html
+
+# 5. 导 PDF (16:9 1600×900)
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --no-margins --print-to-pdf-no-header --hide-scrollbars \
+  --print-to-pdf=项目/out.pdf "file://项目/index.html"
+```
+
+详见 [`references/doc-style.md`](references/doc-style.md) 和 [`references/doc-components.md`](references/doc-components.md).
+
+### 致谢
+
+- 主仓库 / 风格 A & B 设计: [@op7418 歸藏](https://x.com/op7418)
+- 风格 C 灵感: [Anthropic Thariq · HTML > Markdown](https://thariqs.github.io/html-effectiveness/)
+- 风格 C 实战调试: [@znyupup nyx研究所](https://github.com/znyupup)
+
 ## License
 
-MIT © 2026 [op7418](https://github.com/op7418)
+MIT © 2026 [op7418](https://github.com/op7418) (主仓库) · [znyupup](https://github.com/znyupup) (Fork 风格 C 部分)

@@ -281,6 +281,56 @@ CSS 里 `.frame-img img` 已经预设 `object-position:top`，只裁底。
 - **kicker = 本页独一份的引导句**:短、有钩子、是大标题的"小前缀"(如 "BUT"、"一个人,做了什么。"、"The Question")
 - 一个描述栏目,一个描述这一页——绝不互相翻译
 
+### 2c-2. chrome 是 **唯一** meta 入口,内文不准重复 kicker
+
+**现象**:顶 chrome 已写 "WHY HTML · SIX REASONS · 04 / 08",内容区上方又来一行 `.t-meta` "REASONS · 03"——同一句话出现两次,页面立刻显得"碎"。
+
+**做法**:
+- chrome (顶 / 底任选其一,一般用顶) = 唯一的章节标识 + 页码入口
+- 内容区**不允许**再出现 `.t-meta`/`.kicker`/`.section-head .num` 这种 mono uppercase 章节小字
+- 真正需要的 kicker (有引导钩子的, 见 #2c) 才允许保留, 但要确保和 chrome 文案**不同义**
+- 适用所有风格: Swiss / Magazine / Doc-style 一致
+
+**反例 (踩过)**: Page 4 chrome "WHY HTML · SIX REASONS" + 内文 kicker "REASONS · 03" + 6 个 cell 还各加 "01"–"06" → 一页 8 处小字,极碎
+
+### 2d. 装饰性编号一律砍,只留视觉锚
+
+**现象**:Six Cells / Timeline / Ledger 里给每个单元加 mono "01" "02" 序号,看起来"齐整",其实是装饰小字噪音。
+
+**做法**:
+- 砍掉所有 `.cell-num` `.tl-h-node 01-05` `.t-meta mono "01"` 这种**纯装饰序号**
+- 视觉锚换成 **几何元素**:24×24 直角色块、12px 圆点、bar 的高度差等
+- 例外:**功能性序号** (e.g. "100 行" "9.5M views" 这种数据本身) 保留, 这不是装饰
+
+**反例 (踩过)**: timeline 5 节点全加 "01"–"05" mono 灰字 + 已经有 12px 黄色圆点 → 圆点是真锚, 数字是噪音, 砍
+
+### 2e. 角标 / footer 锚 (`— STATEMENT 01` `→ END · WRITTEN IN HTML`) 全砍
+
+**现象**:页面右下角加 `<div class="t-meta">— STATEMENT 01</div>` 或 `→ DENSITY · CLARITY · SHAREABILITY`, 想做"杂志感"角标, 实际是再加一处小字噪音。
+
+**做法**:
+- 一律砍, 不留装饰角标
+- 真正要传递的"标语 / 提示"用 inline 高亮带 (`background: linear-gradient transparent 60%, accent 60%`) 嵌进正文,不另起一行
+- 例外: 引用署名 `— Thariq` 这种是**内容**, 跟在引用块后面, 保留 (但不要单独占一行做角标)
+
+### 2e-2. split slide (`<section class="slide split">`) 一侧 chrome 就够
+
+**现象**:左右双半的 split 版式, 两半各一套 chrome ("07/08 · STATEMENT" + "CONTEXT · /TAKEAWAY"), 一页出现两组导航小字。
+
+**做法**:
+- split slide 只在**左半**(主侧) 放一套 chrome, 右半 chrome **必须删**
+- 如果右半是补充内容, 它的 caption 用 inline 标签或 inline t-cat 提示即可,不再起 chrome 行
+
+### 2f. doc-style 横版**禁止** 240px sticky 左栏 (`.section-head .num` + `.section-body .gutter`)
+
+**现象**:doc-style 横版每页用 `.section-head { grid-template-columns: 240px 1fr }` + `.section-body` 同款, 左侧 240px 栏放 § 01·THESIS 黄色大字 + sub-text "SHIFTS · 3", 看起来"印刷感", 实际跟顶 chrome 的章节标签**第三次重复**, 极碎。
+
+**做法**:
+- `.section-head` / `.section-body` 都用 `display: block` 单栏全宽
+- `.section-head .num`、`.section-body .gutter` 直接 `display: none`
+- 章节标识只允许出现在**顶 chrome / 底 foot 之一**, 不允许第三处
+- 详见 `doc-style.md` § 单栏全宽基线
+
 ### 3. 大标题字号不能超过屏宽 / 单字数
 
 **现象**：中文大标题字号设太大（比如 13vw），结果每行只容 1 个字，强制换行非常难看。
